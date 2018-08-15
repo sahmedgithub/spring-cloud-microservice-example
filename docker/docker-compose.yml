@@ -2,6 +2,14 @@ version: '3.3'
 services:
   mysql:
     image: mysql:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+        reservations:
+          cpus: '0.25'
+          memory: 100M
     ports:
     - "3306:3306"
     environment:
@@ -11,6 +19,14 @@ services:
     - MYSQL_PASSWORD=dbp4ss
   hystrix:
     image: kbastani/hystrix-dashboard
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     ports:
      - "7979:7979"
     links:
@@ -18,16 +34,40 @@ services:
      - discovery
   discovery:
     image: kbastani/discovery-microservice
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     ports:
      - "8761:8761"
   configserver:
     image: kbastani/config-microservice
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     ports:
      - "8888:8888"
     links:
      - discovery
   gateway:
     image: kbastani/api-gateway-microservice
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     ports:
      - "10000:10000"
     links:
@@ -38,6 +78,14 @@ services:
      - recommendation
   user:
     image: kbastani/users-microservice
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     depends_on:
       - mysql
     environment:
@@ -52,6 +100,14 @@ services:
       - mysql
   movie:
     image: kbastani/movie-microservice
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     depends_on:
       - mysql
     environment:
@@ -66,6 +122,14 @@ services:
       - mysql
   recommendation:
     image: kbastani/recommendation-microservice
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     depends_on:
       - mysql
     environment:
@@ -79,6 +143,14 @@ services:
      - configserver
   moviesui:
     image: kbastani/movies-ui
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     environment:
       - DATABASE_HOST=demo-mysql
       - DATABASE_USER=dbuser
