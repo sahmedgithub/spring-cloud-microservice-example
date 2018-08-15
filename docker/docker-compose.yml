@@ -1,3 +1,12 @@
+mysql:
+  image: mysql:latest
+  ports:
+  - "3306:3306"
+  environment:
+  - MYSQL_ROOT_PASSWORD=p4SSW0rd
+  - MYSQL_DATABASE=demo
+  - MYSQL_USER=dbuser
+  - MYSQL_PASSWORD=dbp4ss
 hystrix:
   image: kbastani/hystrix-dashboard
   ports:
@@ -27,23 +36,58 @@ gateway:
    - recommendation
 user:
   image: kbastani/users-microservice
+  depends_on:
+    - mysql
+  environment:
+    - DATABASE_HOST=demo-mysql
+    - DATABASE_USER=dbuser
+    - DATABASE_PASSWORD=dbp4ss
+    - DATABASE_NAME=demo
+    - DATABASE_PORT=3306
   links:
-   - discovery
-   - configserver
+    - discovery
+    - configserver
+    - mysql
 movie:
   image: kbastani/movie-microservice
+  depends_on:
+    - mysql
+  environment:
+    - DATABASE_HOST=demo-mysql
+    - DATABASE_USER=dbuser
+    - DATABASE_PASSWORD=dbp4ss
+    - DATABASE_NAME=demo
+    - DATABASE_PORT=3306
   links:
-   - discovery
-   - configserver
+    - discovery
+    - configserver
+    - mysql
 recommendation:
   image: kbastani/recommendation-microservice
+  depends_on:
+    - mysql
+  environment:
+    - DATABASE_HOST=demo-mysql
+    - DATABASE_USER=dbuser
+    - DATABASE_PASSWORD=dbp4ss
+    - DATABASE_NAME=demo
+    - DATABASE_PORT=3306
   links:
    - discovery
    - configserver
 moviesui:
   image: kbastani/movies-ui
+  environment:
+    - DATABASE_HOST=demo-mysql
+    - DATABASE_USER=dbuser
+    - DATABASE_PASSWORD=dbp4ss
+    - DATABASE_NAME=demo
+    - DATABASE_PORT=3306
+  depends_on:
+    - mysql
   ports:
-     - "9006:9006"
+    - "9006:9006"
   links:
-   - discovery
-   - configserver
+    - discovery
+    - configserver
+    - mysql
